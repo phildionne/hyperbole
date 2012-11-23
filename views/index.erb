@@ -1,0 +1,25 @@
+<div class="row-fluid">
+  <div class="span4 offset4">
+    <%= styled_flash %>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span6 offset3">
+    <ol>
+
+      <% @articles.each do |article| %>
+        <li class="article">
+          <h4>
+            <% if article.title %>
+              <a href="<%= article.url %>"><%= article.title %></a>
+            <% else %>
+              <a href="<%= article.url %>"><%= article.url %></a>
+            <% end %>
+          </h4>
+        </li>
+      <% end %>
+
+    </ol>
+  </div>
+</div>

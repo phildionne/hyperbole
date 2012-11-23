@@ -1,0 +1,9 @@
+source :rubygems
+
+gem 'sinatra'
+gem 'sinatra-assetpack', :require => 'sinatra/assetpack'
+gem 'pg'
+gem 'activerecord'
+gem 'sinatra-activerecord'
+gem 'rake'
+gem 'sinatra-flash'
