@@ -1,7 +1,8 @@
 class Article < ActiveRecord::Base
   attr_accessible :uri, :title
 
-  validates :uri, :presence => true, :format => { :with => URI::regexp }
+  validates_presence_of :uri, :user
+  validates_format_of :uri, :with => URI::regexp
 
   belongs_to :user
 
@@ -13,10 +14,13 @@ class Article < ActiveRecord::Base
   scope :previous_month,  lambda { where('DATE(created_at) >= ?', 1.month.ago ) }
   scope :previous_week,   lambda { where('DATE(created_at) >= ?', 1.week.ago ) }
   # scope :yesterday,       lambda { where('DATE(created_at) = ?', 1.day.ago..Time.now.at_beginning_of_day)} # FIX this
-  scope :today,           lambda { where('DATE(created_at) >= ?', Time.now.at_beginning_of_day) }
+  scope :today,           lambda { where('DATE(created_at) >= ?', Time.zone.now.at_beginning_of_day) }
 
   # scope :group_by_day,    group(['DATE(created_at)'])
 
+  def date
+    self.created_at.in_time_zone
+  end
 
   protected
 
