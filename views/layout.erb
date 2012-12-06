@@ -12,8 +12,7 @@
   <meta name="author" content="@phildionne">
 
   <link href='http://fonts.googleapis.com/css?family=Merriweather:400,700' rel='stylesheet' type='text/css'>
-
-  <%= css :app %>
+  <%= stylesheet_link_tag :app %>
 
   <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -23,10 +22,29 @@
 <body>
 
   <header id="header" role="banner">
-    <div class="container">
+    <div class="container-fluid">
+      <div class="row-fluid">
+
+        <div class="span2">
+          <!-- <h1 id="brand"><a href="#">Hyperbole</a></h1> -->
+        </div>
+
+        <div class="span4 offset2">
+          <% unless session[:flash].empty? %>
+            <%= styled_flash %>
+          <% end %>
+        </div>
+
+        <% if signed_in? %>
+        <div class="span3 offset1" id="main-nav">
+          <p id="user-greeting"><%= greetings %> <%= current_user.fullname_or_american_first_name %></p>
+          <a href="/logout" id="user-logout">Logout</a>
+        </div>
+        <% end %>
+
+      </div>
     </div>
   </header>
-
 
   <div id="wrap" role="document">
     <div class="container-fluid">
@@ -36,12 +54,16 @@
 
   <footer id="footer" role="contentinfo">
     <div class="container">
+      <div class="row">
+
+
+      </div>
     </div>
   </footer><!-- /#footer -->
 
   <scripts src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
   <scripts src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.1/bootstrap.min.js" type="text/javascript"></script>
-  <%= js :app %>
+  <%= javascript_include_tag :app %>
 
 </body>
 </html>
