@@ -8,6 +8,7 @@ require 'sinatra/flash'
 require 'uri'
 require 'awesome_print'
 
+
 Dir['config/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) }
 Dir['lib/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) }
 Dir['models/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) }
@@ -45,6 +46,7 @@ class Application < Sinatra::Base
     end
   end
 
+
   ['/last-year', '/last-month', '/last-week', '/today'].each do |route|
     after route do
       if @articles.empty?
@@ -53,6 +55,7 @@ class Application < Sinatra::Base
       end
     end
   end # doesn't work :(
+
 
   get '/' do
     if signed_in?
@@ -63,30 +66,30 @@ class Application < Sinatra::Base
     end
   end # GET /
 
+
   get '/last-year' do
     @articles = @current_user.articles.previous_year.group_by{ |d| d.created_at.beginning_of_day }
     erb :index
   end # GET /last-year
+
 
   get '/last-month' do
     @articles = @current_user.articles.previous_month.group_by{ |d| d.created_at.beginning_of_day }
     erb :index
   end # GET /last-month
 
+
   get '/last-week' do
     @articles = @current_user.articles.previous_week.group_by{ |d| d.created_at.beginning_of_day }
     erb :index
   end # GET /last-week
 
-  # get '/yesterday' do
-  #   @articles = @current_user.articles.yesterday
-  #   erb :index
-  # end # GET /yesterday
 
   get '/today' do
     @articles = @current_user.articles.today.group_by{ |d| d.created_at.beginning_of_day }
     erb :index
   end # GET /today
+
 
   get '/add/*' do
     if @current_user
@@ -94,7 +97,7 @@ class Application < Sinatra::Base
 
       # valid_uri? doesn't work like expected -> FIX IT
       if valid_uri?(uri) # First check to prevent from making a bad request to readability
-        uri = cleanup_uri(uri)
+        uri = sanitize_uri(uri)
 
         begin
           readability_hash = readability.parse(uri)
@@ -127,6 +130,7 @@ class Application < Sinatra::Base
     end
   end # GET /add/*
 
+
   get '/auth/:provider/callback' do
     auth = request.env['omniauth.auth']
 
@@ -144,10 +148,12 @@ class Application < Sinatra::Base
     redirect to('/')
   end # GET /auth/:provider/callback
 
+
   get '/auth/failure' do
     flash[:error] = "Oops... Something went wrong."
     redirect to('/')
   end # GET /auth/failure
+
 
   get '/logout' do
     logout @current_user
@@ -155,14 +161,17 @@ class Application < Sinatra::Base
     redirect to('/')
   end # GET /logout
 
+
   get '/account/destroy' do
     @current_user.destroy
     flash[:success] = "Your account has been destroyed forever, forever, ever, forever, ever?"
   end # GET /account/destroy
 
+
   not_found do
     erb :error_404
   end
+
 
   # Helpers
   helpers do
@@ -191,7 +200,7 @@ class Application < Sinatra::Base
       !(uri =~ URI::regexp).nil?
     end
 
-    def cleanup_uri(uri)
+    def sanitize_uri(uri)
       # Fix weird single slash uris given by request.fullpath
       uri = URI.split(uri)
       uri[5].sub!(%r(^\/{1}), '') if uri[2].nil?
