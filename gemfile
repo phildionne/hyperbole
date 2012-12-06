@@ -2,13 +2,17 @@ ruby '1.9.3'
 source :rubygems
 
 gem 'sinatra'
-gem 'sinatra-assetpack', :require => 'sinatra/assetpack'
+
 gem 'pg'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'rake'
 gem 'omniauth'
 gem 'omniauth-twitter'
+gem 'sinatra-sprockets-ext'
+gem 'less'
+gem 'therubyracer'
+gem 'httparty'
 
 gem 'sinatra-flash'
 gem 'tux'
