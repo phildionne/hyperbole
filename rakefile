@@ -2,5 +2,4 @@ APP_FILE  = 'app.rb'
 APP_CLASS = 'Application'
 
 require './app'
-require 'sinatra/assetpack/rake'
 require 'sinatra/activerecord/rake'
