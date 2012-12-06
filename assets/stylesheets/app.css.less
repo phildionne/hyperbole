@@ -1,0 +1,108 @@
+/*
+ * depend_on app-variables
+ *= require bootstrap/bootstrap
+ *= require bootstrap/responsive
+ *= require_self
+ *
+ * Hyperbole v1.0
+ * by @phildionne
+ *
+ */
+
+@import "lib/assets/stylesheets/bootstrap/variables.less";
+@import "assets/stylesheets/app-variables.less";
+@import "lib/assets/stylesheets/bootstrap/mixins.less";
+
+//
+// General
+// --------------------------------------------------
+
+html {
+  min-height: 100%;
+}
+
+body {
+min-height: 100%;
+  border: @gridGutterWidth/2 solid @grayLighter;
+}
+
+//
+// Scaffolding
+// --------------------------------------------------
+
+
+//
+// Header
+// --------------------------------------------------
+
+#header {
+  padding: @gridGutterWidth 0;
+}
+
+
+//
+// Navigation
+// --------------------------------------------------
+
+#main-nav {
+  padding-right: @gridGutterWidth;
+  text-align: right;
+  #user-greeting {}
+  #user-logout {
+    opacity: 0.5;
+  }
+}
+
+
+//
+// Footer
+// --------------------------------------------------
+
+#footer {
+  padding: @gridGutterWidth 0;
+}
+
+
+
+
+//
+// Frontpage
+// --------------------------------------------------
+
+#frontpage {
+  text-align: center;
+}
+
+
+//
+// Articles
+// --------------------------------------------------
+.article-group {
+  .article-group-time {
+    margin: @baseLineHeight 0;
+    line-height: 26px;
+    font-weight: 700;
+    text-align: right;
+  }
+  .article-group-list {
+    li { color: @grayLight; .transition(color 0.1s); }
+    &:hover {
+      li { color: @gray; }
+    }
+  }
+  .article {
+    .article-title {
+      margin: @baseLineHeight 0;
+      line-height: 26px;
+      font-weight: 400;
+    }
+  }
+}
+
+//
+// Flash
+// --------------------------------------------------
+
+#flash {
+  text-align: center;
+}
