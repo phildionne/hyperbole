@@ -1,4 +1,4 @@
-readability = Readability.new('964b4308e7f709a52de955011e50520ee624c6a1')
+readability = Readability.new(ENV['READABILITY_KEY'])
 @current_user = User.find(1)
 
 articles = [
