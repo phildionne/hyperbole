@@ -1,5 +1,5 @@
-readability = Readability.new(ENV['READABILITY_KEY'])
-@current_user = User.find(1)
+readability = Readability.new(ENV['READABILITY_API_KEY'])
+@current_user = User.first
 
 articles = [
   ['https://medium.com/really-big-ideas-we-should-try/32eeaacc207a', 'rand'],
