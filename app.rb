@@ -6,34 +6,47 @@ require 'omniauth'
 require 'omniauth-twitter'
 require 'sinatra/flash'
 require 'uri'
+require 'yaml'
 require 'awesome_print'
 
-
-Dir['config/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) }
-Dir['lib/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) }
+Dir['lib/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) } # FIXME: Move assets into vendor/ directory
 Dir['models/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) }
 
+
 class Application < Sinatra::Base
-  register Sinatra::Flash
   register Sinatra::Sprockets
+  register Sinatra::Flash
+
   use Rack::Session::Cookie
-  use OmniAuth::Strategies::Twitter, ENV['TWITTER_KEY'], ENV['TWITTER_SECRET']
+  use OmniAuth::Strategies::Twitter, ENV['TWITTER_API_KEY'], ENV['TWITTER_API_SECRET']
 
   configure do
+    set :app_name, 'Hyperbole'
+    set :default_time_zone, 'Eastern Time (US & Canada)'
+
     enable :logging
-    Time.zone = 'Eastern Time (US & Canada)'
+    Time.zone = settings.default_time_zone
+
+    # Database
+    database_config = YAML.load_file('config/database.yml')
+    ActiveRecord::Base.establish_connection(database_config[settings.environment.to_s])
+
+    # Sprockets
+    Sinatra::Sprockets.configure do |config|
+      config.digest = true              # Append a digest to URLs
+      config.compile = true             # On-the-fly compilation
+      config.manifest_path = 'assets'
+      config.css_compressor = true     # CSS compressor instance
+      config.js_compressor = true      # JS compressor instance
+    end
   end
 
-  # Database
-  set :database, ENV['DATABASE_URL'] || 'postgres://localhost/hyperbole'
-  ActiveRecord::Base.establish_connection('postgres://localhost/hyperbole')
-
   # Readability
-  readability = Readability.new(ENV['READABILITY_KEY'])
+  readability = Readability.new(ENV['READABILITY_API_KEY']) # FIXME: Find the good way to initialize this
+
 
   # Routes
-  PROTECTED_ROUTES = ['logout', 'account/destroy', 'last-year', 'last-month', 'last-week', 'yesterday', 'today', 'add/']
-  # Find a way to handle routes matching 'add/something'
+  PROTECTED_ROUTES = ['logout', 'account/destroy', 'last-year', 'last-month', 'last-week', 'today', 'add/'] # FIXME: Find a way to handle routes matching 'add/something'
 
   before '/*' do |route|
     if signed_in?
@@ -45,16 +58,6 @@ class Application < Sinatra::Base
       redirect to('/')
     end
   end
-
-
-  ['/last-year', '/last-month', '/last-week', '/today'].each do |route|
-    after route do
-      if @articles.empty?
-        flash[:info] = "You haven't added any articles yet!"
-        ap "You haven't added any articles yet!"
-      end
-    end
-  end # doesn't work :(
 
 
   get '/' do
@@ -95,7 +98,7 @@ class Application < Sinatra::Base
     if @current_user
       uri = request.fullpath.sub(%r(^\/add\/), '')
 
-      # valid_uri? doesn't work like expected -> FIX IT
+      # FIXME: valid_uri? doesn't work like expected
       if valid_uri?(uri) # First check to prevent from making a bad request to readability
         uri = sanitize_uri(uri)
 
@@ -144,7 +147,7 @@ class Application < Sinatra::Base
     end
 
     login user
-    flash[:success] = "Logged in!"
+    flash[:success] = "Hello!"
     redirect to('/')
   end # GET /auth/:provider/callback
 
@@ -157,7 +160,7 @@ class Application < Sinatra::Base
 
   get '/logout' do
     logout @current_user
-    flash[:success] = "Logged out!"
+    flash[:success] = "Goodbye!"
     redirect to('/')
   end # GET /logout
 
@@ -170,6 +173,15 @@ class Application < Sinatra::Base
 
   not_found do
     erb :error_404
+  end
+
+
+  ['/last-year', '/last-month', '/last-week', '/today'].each do |route|
+    after route do
+      if @current_user && @articles.nil?
+        flash[:info] = "You haven't added any articles yet!"
+      end
+    end
   end
 
 
@@ -196,13 +208,16 @@ class Application < Sinatra::Base
       !current_user
     end
 
-    def valid_uri?(uri)
-      !(uri =~ URI::regexp).nil?
+    def valid_uri?(string)
+      uri = URI.parse(string)
+      return false if !['http', 'https'].include?(uri.scheme)
+      return false if uri.host.blank? && uri.path.blank?
+      true
     end
 
-    def sanitize_uri(uri)
+    def sanitize_uri(string)
       # Fix weird single slash uris given by request.fullpath
-      uri = URI.split(uri)
+      uri = URI.split(string)
       uri[5].sub!(%r(^\/{1}), '') if uri[2].nil?
       uri[0] << '://'
       uri.join
@@ -211,6 +226,10 @@ class Application < Sinatra::Base
     def greetings
       greetings ||= Greeter.new
       greetings.at(Time.zone.now)
+    end
+
+    def friendly_date(time)
+      date = time.today? ? "Today" : time.strftime('%B %d')
     end
   end
 
