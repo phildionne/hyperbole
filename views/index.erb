@@ -2,7 +2,7 @@
 <div class="row-fluid article-group" id="">
 
   <div class="span3 offset1 article-group-time">
-    <time><%= time.strftime('%B %d') %></time>
+    <time><%= friendly_date(time) %></time>
   </div>
 
   <div class="span5 article-group-list">
@@ -11,12 +11,9 @@
       <li>
         <article class="article">
           <h4 class="article-title">
-            <% if article.title %>
             <a href="<%= article.uri %>"><%= article.title %></a>
-            <% else %>
-            <a href="<%= article.uri %>"><%= article.uri %></a>
-            <% end %>
           </h4>
+          <span><%= article.uri_host %></span>
         </article>
       </li>
       <% end %>
