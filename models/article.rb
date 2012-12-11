@@ -12,4 +12,8 @@ class Article < ActiveRecord::Base
   scope :previous_week,   lambda { where('DATE(created_at) >= ?', 1.week.ago ) }
   scope :today,           lambda { where('DATE(created_at) >= ?', Time.zone.now.at_beginning_of_day) }
 
+  def uri_host
+    uri = URI.parse(self.uri)
+    uri.host
+  end
 end
