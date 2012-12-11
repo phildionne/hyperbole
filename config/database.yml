@@ -4,10 +4,3 @@ development:
   username:
   password:
   database: hyperbole
-
-production:
-  adapter: <%= ENV['DATABASE_URL'] %>
-  host:
-  username:
-  password:
-  database:
