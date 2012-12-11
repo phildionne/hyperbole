@@ -13,17 +13,19 @@
 @import "assets/stylesheets/app-variables.less";
 @import "lib/assets/stylesheets/bootstrap/mixins.less";
 
+
 //
 // General
 // --------------------------------------------------
 
 html {
-  min-height: 100%;
+  height: 100%;
 }
 
 body {
-min-height: 100%;
+  min-height: 100%;
   border: @gridGutterWidth/2 solid @grayLighter;
+  border-bottom: none;
 }
 
 //
@@ -62,9 +64,6 @@ min-height: 100%;
   padding: @gridGutterWidth 0;
 }
 
-
-
-
 //
 // Frontpage
 // --------------------------------------------------
@@ -78,21 +77,27 @@ min-height: 100%;
 // Articles
 // --------------------------------------------------
 .article-group {
+  color: @gray;
+  &:nth-child(2) { opacity: 0.90; }
+  &:nth-child(3) { opacity: 0.80; }
+  &:nth-child(4) { opacity: 0.70; }
+  &:nth-child(5) { opacity: 0.60; }
+  &:nth-child(6) { opacity: 0.50; }
+  &:nth-child(n+7) { opacity: 0.40; }
+  &:hover { opacity: 1; }
+  .transition(opacity 0.1s);
+  li { color: @grayLight; }
   .article-group-time {
     margin: @baseLineHeight 0;
     line-height: 26px;
     font-weight: 700;
     text-align: right;
   }
-  .article-group-list {
-    li { color: @grayLight; .transition(color 0.1s); }
-    &:hover {
-      li { color: @gray; }
-    }
-  }
+  .article-group-list {}
   .article {
+    margin: @baseLineHeight 0;
     .article-title {
-      margin: @baseLineHeight 0;
+      margin: 0;
       line-height: 26px;
       font-weight: 400;
     }
@@ -105,4 +110,21 @@ min-height: 100%;
 
 #flash {
   text-align: center;
+}
+
+
+//
+// Responsive
+// --------------------------------------------------
+
+@media (max-width: 767px) {
+  #header {
+    #user-greeting { text-align: center; }
+    #user-logout { display: none; }
+  }
+  .article-group {
+    margin-bottom: @gridGutterWidth;
+    &:nth-child(n) { opacity: 1; }
+    .article-group-time { text-align: center; }
+  }
 }
