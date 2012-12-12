@@ -28,8 +28,9 @@ class Application < Sinatra::Base
     Time.zone = settings.default_time_zone
 
     # Database
-    database_config = YAML.load_file('config/database.yml')
-    ActiveRecord::Base.establish_connection(database_config[settings.environment.to_s])
+    database_config = ENV['DATABASE_URL'] || YAML.load_file('config/database.yml')[settings.environment.to_s]
+    ap database_config
+    ActiveRecord::Base.establish_connection(database_config)
 
     # Sprockets
     Sinatra::Sprockets.configure do |config|
