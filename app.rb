@@ -29,7 +29,6 @@ class Application < Sinatra::Base
 
     # Database
     database_config = ENV['DATABASE_URL'] || YAML.load_file('config/database.yml')[settings.environment.to_s]
-    ap database_config
     ActiveRecord::Base.establish_connection(database_config)
 
     # Sprockets
