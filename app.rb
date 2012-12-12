@@ -224,8 +224,8 @@ class Application < Sinatra::Base
     end
 
     def greetings
-      greetings ||= Greeter.new
-      greetings.at(Time.zone.now)
+      greeter ||= Greeter.new
+      greeter.at(Time.zone.now)
     end
 
     def friendly_date(time)

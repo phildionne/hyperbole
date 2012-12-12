@@ -1,6 +1,5 @@
-require 'date'
-
 class Greeter
+  require 'date'
 
   def at(time_with_zone)
     datetime = time_with_zone.to_datetime
