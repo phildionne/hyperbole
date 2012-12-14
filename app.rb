@@ -25,7 +25,6 @@ class Application < Sinatra::Base
     set :default_time_zone, 'Eastern Time (US & Canada)'
 
     enable :logging
-    Time.zone = settings.default_time_zone
 
     # Database
     database_config = ENV['DATABASE_URL'] || YAML.load_file('config/database.yml')[settings.environment.to_s]
@@ -50,12 +49,14 @@ class Application < Sinatra::Base
 
   before '/*' do |route|
     if signed_in?
+      login(@current_user)
       Time.zone = @current_user.time_zone if @current_user.time_zone
-    end
 
-    if PROTECTED_ROUTES.include?(route) && signed_out?
+    elsif PROTECTED_ROUTES.include?(route)
       flash[:error] = "You need to be logged in to do that."
       redirect to('/')
+    else
+      Time.zone = settings.default_time_zone
     end
   end
 
@@ -65,6 +66,7 @@ class Application < Sinatra::Base
       @articles = @current_user.articles.group_by{ |d| d.created_at.beginning_of_day }
       erb :index
     else
+      @articles = Article.today.limit(20).group_by{ |d| d.created_at.beginning_of_day }
       erb :frontpage
     end
   end # GET /
@@ -175,12 +177,10 @@ class Application < Sinatra::Base
     erb :error_404
   end
 
-
-  ['/last-year', '/last-month', '/last-week', '/today'].each do |route|
-    after route do
-      if @current_user && @articles.nil?
-        flash[:info] = "You haven't added any articles yet!"
-      end
+  # FIXME: Doesn't work at all...
+  after '/*' do |route|
+    if ['last-year', 'last-month', 'last-week', 'today'].include?(route) && signed_in? && @articles.blank?
+      flash[:info] = "You haven't added any articles yet!"
     end
   end
 

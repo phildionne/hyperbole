@@ -7,3 +7,30 @@
     </div>
   </div>
 </div>
+
+<hr>
+
+<% @articles.each do |time, articles| %>
+<div class="row-fluid article-group" id="">
+
+  <div class="span3 offset1 article-group-time">
+    <time><%= friendly_date(time) %></time>
+  </div>
+
+  <div class="span5 article-group-list">
+    <ol>
+      <% articles.each do |article| %>
+      <li>
+        <article class="article">
+          <h4 class="article-title">
+            <a href="<%= article.uri %>"><%= article.title %></a>
+          </h4>
+          <span><%= article.uri_host %></span>
+        </article>
+      </li>
+      <% end %>
+    </ol>
+  </div>
+
+</div>
+<% end %>
