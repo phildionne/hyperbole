@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   has_many :authentications, :dependent => :destroy
   has_many :articles, :dependent => :destroy
 
-  validates_presence_of :name, :location
+  validates_presence_of :name
 
   def self.find_or_create_from_auth(auth, user = nil)
     # Create user if current_user is nil
