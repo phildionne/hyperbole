@@ -1,14 +1,15 @@
 class User < ActiveRecord::Base
-  attr_accessible :name, :location, :time_zone
+  attr_accessible :name, :nickname, :location, :time_zone
 
   has_many :authentications, :dependent => :destroy
   has_many :articles, :dependent => :destroy
 
-  validates_presence_of :name
+  validates_presence_of :name, :nickname
 
   def self.find_or_create_from_auth(auth, user = nil)
     # Create user if current_user is nil
     user ||= User.create!(  :name => auth[:info][:name],
+                            :nickname => auth[:info][:nickname],
                             :location => auth[:info][:location],
                             :time_zone => auth[:extra][:raw_info][:time_zone] # Fallback to default Time.zone if empty
                             )
