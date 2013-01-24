@@ -25,7 +25,17 @@
     <div class="container-fluid">
       <div class="row-fluid">
 
-        <div class="span4 offset4">
+        <div class="span3">
+          <% if signed_in? %>
+          <ul class="unstyled" id="filter-nav">
+            <li><a href="/last-week">Last week</a></li>
+            <li><a href="/last-month">Last month</a></li>
+            <li><a href="/last-year">Last year</a></li>
+          </ul>
+          <% end %>
+        </div>
+
+        <div class="span4 offset1">
           <% unless session[:flash].blank? %>
             <%= styled_flash %>
           <% end %>
@@ -34,7 +44,9 @@
         <% if signed_in? %>
         <div class="span3 offset1" id="main-nav">
           <p id="user-greeting"><%= greetings %> <%= current_user.fullname_or_american_first_name %></p>
-          <a href="/logout" id="user-logout">Logout</a>
+          <ul class="unstyled">
+            <li><a href="/logout">Logout</a></li>
+          </ul>
         </div>
         <% end %>
 
