@@ -67,7 +67,7 @@ class Application < Sinatra::Base
       @articles = @current_user.articles.group_by{ |d| d.created_at.beginning_of_day }
       erb :index
     else
-      @articles = Article.today.limit(20).group_by{ |d| d.created_at.beginning_of_day }
+      @articles = Article.previous_year.limit(20).group_by{ |d| d.created_at.beginning_of_day }
       erb :frontpage
     end
   end # GET /
