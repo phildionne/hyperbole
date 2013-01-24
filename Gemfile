@@ -12,7 +12,7 @@ gem 'omniauth-twitter'
 gem 'sinatra-sprockets-ext'
 gem 'less'
 gem 'therubyracer'
-gem 'httparty'
+gem 'readability-parser'
 
 gem 'sinatra-flash'
 gem 'tux'

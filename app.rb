@@ -6,6 +6,7 @@ require 'omniauth'
 require 'omniauth-twitter'
 require 'sinatra/flash'
 require 'uri'
+require 'readability'
 require 'yaml'
 require 'awesome_print'
 
@@ -41,7 +42,7 @@ class Application < Sinatra::Base
   end
 
   # Readability
-  readability = Readability.new(ENV['READABILITY_API_KEY']) # FIXME: Find the good way to initialize this
+  Readability.api_token = ENV['READABILITY_API_KEY']
 
 
   # Routes
@@ -104,12 +105,7 @@ class Application < Sinatra::Base
       if valid_uri?(uri) # First check to prevent from making a bad request to readability
         uri = sanitize_uri(uri)
 
-        begin
-          readability_hash = readability.parse(uri)
-        rescue *Readability::READABILITY_API_ERRORS => e
-          flash[:error] = "Something went wrong: " + e.message
-          redirect to('/')
-        end
+        content = Readability.parse(uri)
 
       else
        flash[:error] = "Invalid URI."
@@ -119,8 +115,8 @@ class Application < Sinatra::Base
       begin
         article = Article.new
         article.user = @current_user
-        article.uri = readability_hash[:url]
-        article.title = readability_hash[:title]
+        article.uri = content.url
+        article.title = content.title
         article.save!
       rescue ActiveRecord::RecordInvalid => e
         flash[:error] = e.message
