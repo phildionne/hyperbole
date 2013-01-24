@@ -145,7 +145,6 @@ class Application < Sinatra::Base
     end
 
     login user
-    flash[:success] = "Hello!"
     redirect to('/')
   end # GET /auth/:provider/callback
 
