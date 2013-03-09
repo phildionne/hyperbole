@@ -2,14 +2,19 @@
 Minimalist sinatra bookmarking app. Built for fun and to experiment with Sinatra.
 
 ## Getting started
+1. `psql -c 'CREATE DATABASE hyperbole;'`
+2. Set `DATABASE_URL` to something like `postgres://{user}:{password}@{host}:{port}/path`
+3. Set `READABILITY_API_KEY`, `TWITTER_API_KEY` and `TWITTER_API_SECRET`
+
 ```
 bundle install
+bundle exec rake db:migrate
 bundle exec rackup
 ```
 
 ## Usage
 1. Sign Up with your Twitter account
-2. Bookmark interesting links by pasting them in the adress bar e.g. `localhost:9393/add/http://www.my-interesting-link.com`
+2. Bookmark interesting links by pasting them in the adress bar e.g. `localhost:9292/add/http://www.my-interesting-link.com`
 
 ## Author
 [Philippe Dionne](http://www.phildionne.com)
