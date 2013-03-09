@@ -21,8 +21,7 @@ class Application < Sinatra::Base
     enable :logging
 
     # Database
-    database_config = ENV['DATABASE_URL'] || YAML.load_file('config/database.yml')[settings.environment.to_s]
-    ActiveRecord::Base.establish_connection(database_config)
+    ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 
     # Sprockets
     Sinatra::Sprockets.configure do |config|
