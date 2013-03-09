@@ -1,18 +1,23 @@
 source :rubygems
 
 gem 'sinatra'
-
 gem 'pg'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'rake'
 gem 'omniauth'
 gem 'omniauth-twitter'
-gem 'sinatra-sprockets-ext'
-gem 'less'
-gem 'therubyracer'
 gem 'readability-parser'
-
 gem 'sinatra-flash'
-gem 'tux'
-gem 'awesome_print'
+
+
+group :development, :test do
+  gem 'tux'
+  gem 'awesome_print'
+end
+
+group :assets do
+  gem 'sinatra-sprockets-ext'
+  gem 'less'
+  gem 'therubyracer'
+end

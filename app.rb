@@ -1,14 +1,7 @@
-require 'sinatra/base'
-require 'sinatra/activerecord'
-require 'active_record'
-require 'sinatra/sprockets'
-require 'omniauth'
-require 'omniauth-twitter'
-require 'sinatra/flash'
 require 'uri'
 require 'readability'
 require 'yaml'
-require 'awesome_print'
+Bundler.require(:default, :development, :assets)
 
 Dir['lib/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) } # FIXME: Move assets into vendor/ directory
 Dir['models/*.rb'].each {|file| require File.expand_path('../'+file, __FILE__) }
