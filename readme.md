@@ -4,12 +4,12 @@ Minimalist sinatra bookmarking app. Built for fun and to experiment with Sinatra
 ## Getting started
 1. `psql -c 'CREATE DATABASE hyperbole;'`
 2. Set `DATABASE_URL` to something like `postgres://{user}:{password}@{host}:{port}/path`
-3. Set `READABILITY_API_KEY`, `TWITTER_API_KEY` and `TWITTER_API_SECRET`
+3. Set `PORT`, `READABILITY_API_KEY`, `TWITTER_API_KEY` and `TWITTER_API_SECRET`
 
 ```
 bundle install
 bundle exec rake db:migrate
-bundle exec rackup
+bundle exec foreman start
 ```
 
 ## Usage

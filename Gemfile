@@ -2,6 +2,7 @@ source :rubygems
 
 gem 'sinatra'
 gem 'pg'
+gem 'foreman'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'rake'
